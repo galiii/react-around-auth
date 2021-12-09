@@ -1,0 +1,15 @@
+.register__input {
+    margin: 0;
+    margin-bottom:30px;
+    padding: 0;
+    background: #000;
+    color:  #ccc;
+    border:none;
+    border-bottom: 2px solid #ccc;
+    
+}
+
+input[type="password"] {
+    padding: 0;
+    background-color: black;
+}

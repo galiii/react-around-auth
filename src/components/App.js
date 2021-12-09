@@ -1,6 +1,12 @@
 import React from "react";
-import "../index.css";
+import { Route, Switch, Redirect } from "react-router-dom";
+
 import Header from "./Header";
+
+import Login from "./Login";
+import Register from "./Register";
+import ProtectedRoute from "./ProtectedRoute";
+
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 import EditProfilePopup from "./EditProfilePopup";
@@ -10,7 +16,8 @@ import ImagePopup from "./ImagePopup";
 import Footer from "./Footer";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-import api  from "../utils/api.js";
+import api from "../utils/api.js";
+import "../index.css";
 
 function App() {
   //Popup
@@ -20,14 +27,14 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
     React.useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
-  //const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   const [selectedCard, setSelectedCard] = React.useState({
     name: "",
     link: "",
   });
 
-  const [currentUser, setCurrentUser] = React.useState({}); 
+  const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
 
   /* Get User Information && Card List from the api */
@@ -121,7 +128,7 @@ function App() {
       .addCard(data)
       .then((res) => {
         //likes [] , _id, name, link, owner
-        console.log("add res",res);
+        console.log("add res", res);
         setCards([res, ...cards]);
         setIsAddPlacePopupOpen(false);
       })
@@ -144,16 +151,36 @@ function App() {
       {/* embedding data from the currentUser using the  context provider  */}
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
-        <Main
-          onEditAvatarClick={handleEditAvatarClick}
-          onEditProfileClick={handleEditProfileClick}
-          onAddPlaceClick={handleAddPlaceClick}
-          cards={cards}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-        />
-        <Footer />
+
+        <Switch>
+          <Route path="/signup">
+            <Register />
+          </Route>
+          <Route path="/signin">
+            <Login />
+          </Route>
+          
+          <ProtectedRoute isLoggedIn={isLoggedIn} path="/cards">
+          <Main
+              onEditAvatarClick={handleEditAvatarClick}
+              onEditProfileClick={handleEditProfileClick}
+              onAddPlaceClick={handleAddPlaceClick}
+              cards={cards}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+            />
+            <Footer />
+
+          </ProtectedRoute>
+          <Route path="/">
+            {
+              //if the user isLoggedIn send him to the Main page
+              //else send him to the login/signin page
+              isLoggedIn ? <Redirect to="/cards" /> : <Redirect to="/signin" />
+            }
+          </Route>
+        </Switch>
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

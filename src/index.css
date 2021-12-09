@@ -13,6 +13,13 @@
 @import url(./blocks/header/header.css);
 @import url(./blocks/header/__logo/header__logo.css);
 
+/* Register */
+@import url(./blocks/register/register.css);
+@import url(./blocks/register/__title/register__title.css);
+@import url(./blocks/register/__form/register__form.css);
+@import url(./blocks/register/__label/register__label.css);
+@import url(./blocks/register/__input/register__input.css);
+
 
 /** Profile **/
 @import url(./blocks/profile/profile.css);
