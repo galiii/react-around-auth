@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import { Link, withRouter } from "react-router-dom";
-import * as auth from "../utils/auth";
 
-function Login() {
+function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //if (values.password === values.confirmPassword) {
-    //auth.register(values).catch((err) => console.error(err));
-    //}
+    onLogin({ email, password });
   };
 
   const handleEmail = (event) => setEmail(event.target.value);
@@ -25,7 +22,6 @@ function Login() {
     <div className="register">
       <h2 className="register__title">Log in</h2>
       <form className="form register__form ">
-        {/*<label className="register__label"> */}
         <input
           className="form__input register__input"
           name="email"
@@ -35,8 +31,6 @@ function Login() {
           placeholder="Email"
           required
         />
-        {/*</label>*/}
-        {/*<label className="register__label">*/}
         <input
           className="form__input register__input"
           name="password"
@@ -46,15 +40,14 @@ function Login() {
           placeholder="Password"
           required
         />
-        {/*</label>*/}
       </form>
-      
-        <button onClick={handleSubmit} className="form__button register__button">
+
+      <button onClick={handleSubmit} className="form__button register__button">
         Log in
-        </button>
-     
+      </button>
+
       <div className="register__signin">
-       {"Not a member yet? "}
+        {"Not a member yet? "}
         <Link to="/signup" className="register__login-link">
           Sign up here!
         </Link>

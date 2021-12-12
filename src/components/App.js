@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 
 import Header from "./Header";
 
@@ -18,41 +18,93 @@ import Footer from "./Footer";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 import api from "../utils/api.js";
+import * as auth from "../utils/auth";
+import { SUCCESS, FAILURE } from "../utils/constants.js";
 import "../index.css";
 
 function App() {
-  //States for auth
+  // States for auth
   const [isSuccessful, setIsSuccessful] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   //popup
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
 
   /* States when you ready Login */
-  //Popups
+  // Popups
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
     React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
     React.useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
-  
+
   const [selectedCard, setSelectedCard] = React.useState({
     name: "",
     link: "",
   });
   const [cards, setCards] = React.useState([]);
   const [currentUser, setCurrentUser] = React.useState({});
-  
+  const history = useHistory();
 
   /* Get User Information && Card List from the api */
   React.useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then(([userData, cardData]) => {
+        console.log(userData);
         setCurrentUser({ ...userData });
         setCards([...cardData]);
       })
       .catch(console.error);
   }, []);
+
+  const handleSignUp = ({ email, password }) => {
+    auth
+      .register({ email, password })
+      .then((res) => {
+        setIsSuccessful(true);
+          setMessage(SUCCESS);
+        history.push("/signin");
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsSuccessful(false);
+        setMessage(FAILURE);
+      })
+      .finally(() => {
+        console.log("finally register");
+        setIsInfoTooltipOpen(true);
+      });
+  };
+
+  const handleLogin = ({ email, password }) => {
+    auth
+      .login({ email, password })
+      .then((res) => {
+        if (res.token) {
+          setIsLoggedIn(true);
+          console.log("in login", res);
+          history.push("/");
+          // for tooltipinfo
+          setIsSuccessful(true);
+          setMessage(SUCCESS);
+          return;
+        } else {
+          setIsSuccessful(false);
+          setMessage(FAILURE);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsSuccessful(false);
+        setMessage(FAILURE);
+      })
+      .finally(() => {
+        console.log("finally login");
+        setIsInfoTooltipOpen(true);
+      });
+  };
 
   /* Click handlers */
   const handleEditAvatarClick = () => setIsEditAvatarPopupOpen(true);
@@ -151,18 +203,9 @@ function App() {
     setIsImagePopupOpen(false);
   };
 
-  const handleSignIn = () => {
-
-  };
-  const handleLogin = () => {
-
-  };
-
   const handleSignOut = () => {};
 
   /* User Authentication   */
-
-
 
   return (
     <div className="page__container">
@@ -172,13 +215,13 @@ function App() {
 
         <Switch>
           <Route path="/signup">
-            <Register />
+            <Register onSignUp={handleSignUp} />
           </Route>
           <Route path="/signin">
-            <Login />
+            <Login onLogin={handleLogin} />
           </Route>
 
-          <ProtectedRoute isLoggedIn={isLoggedIn} path="/cards">
+          <ProtectedRoute isLoggedIn={isLoggedIn} path="/">
             <Main
               onEditAvatarClick={handleEditAvatarClick}
               onEditProfileClick={handleEditProfileClick}
@@ -194,14 +237,16 @@ function App() {
             {
               //if the user isLoggedIn send him to the Main page
               //else send him to the login/signin page
-              isLoggedIn ? <Redirect to="/cards" /> : <Redirect to="/signin" />
+              isLoggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />
             }
           </Route>
         </Switch>
 
-        <InfoTooltip 
-        isOpen={isInfoTooltipOpen} 
-        onClose={closeAllPopups} 
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllPopups}
+          isSuccessful={isSuccessful}
+          message={message}
         />
 
         <EditProfilePopup

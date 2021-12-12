@@ -1,29 +1,18 @@
 import React, { useState } from "react";
 import { Link, withRouter, useHistory } from "react-router-dom";
-import * as auth from "../utils/auth";
 
-function Register() {
+
+function Register({onSignUp}) {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //if (values.password === values.confirmPassword) {
-    //auth.register(values).catch((err) => console.error(err));
-    //}
-    auth
-      .register({ email, password })
-      .then((res) => {history.push("/signin")})
-      .catch((err) => console.error(err));
+    onSignUp({email, password});
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    //setValues({ ...values, [name]: value });
-    //console.log(values);
-  };
-
+ 
   const handleEmail = (event) => setEmail(event.target.value);
   const handlePassword = (event) => setPassword(event.target.value);
 
@@ -36,7 +25,7 @@ function Register() {
     <div className="register">
       <h2 className="register__title">Sign up</h2>
       <form className="register__form ">
-        {/*<label className="register__label"> */}
+        
         <input
           className="form__input register__input "
           name="email"
@@ -46,8 +35,7 @@ function Register() {
           placeholder="Email"
           required
         />
-        {/*</label>*/}
-        {/*<label className="register__label">*/}
+        
         <input
           className="form__input register__input"
           name="password"
@@ -57,7 +45,7 @@ function Register() {
           placeholder="Password"
           required
         />
-        {/*</label>*/}
+       
       </form>
       
         <button onClick={handleSubmit} className="form__button register__button">

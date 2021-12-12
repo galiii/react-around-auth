@@ -67,29 +67,29 @@ export const updateImageModel = document.querySelector(
 );
 
 //Form
-export const formEditProfile = editProfileModel.querySelector(
-  settings.formSelector
-);
-export const formUpdateImage = updateImageModel.querySelector(
-  settings.formSelector
-);
-export const formAddCard = addCardModel.querySelector(settings.formSelector);
+//export const formEditProfile = editProfileModel.querySelector(
+  //settings.formSelector
+//);
+//export const formUpdateImage = updateImageModel.querySelector(
+  //settings.formSelector
+//);
+//export const formAddCard = addCardModel.querySelector(settings.formSelector);
 
 //Close buttons
-export const editModelCloseButton = editProfileModel.querySelector(
-  ".popup__close-button"
-);
+//export const editModelCloseButton = editProfileModel.querySelector(
+  //".popup__close-button"
+//);
 
-export const addCardModelCloseButton = addCardModel.querySelector(
-  ".popup__close-button"
-);
+//export const addCardModelCloseButton = addCardModel.querySelector(
+//  ".popup__close-button"
+//);
 
-export const updateImageModelCloseButton = updateImageModel.querySelector(
-  ".popup__close-button"
-);
+//export const updateImageModelCloseButton = updateImageModel.querySelector(
+  //".popup__close-button"
+//);
 
 //Input
-export const profileNameInput = editProfileModel.querySelector(
+/*export const profileNameInput = editProfileModel.querySelector(
   ".form__input_type_name"
 );
 export const profileJobInput = editProfileModel.querySelector(
@@ -109,3 +109,7 @@ export const cardLinkInput = addCardModel.querySelector(
 //User
 export const userNameElement = document.querySelector(".profile__name");
 export const userJobElement = document.querySelector(".profile__job");
+*/
+export const SUCCESS = "Success! You have now been registered.";
+export const FAILURE = "Oops, something went wrong! Please try again.";
+
