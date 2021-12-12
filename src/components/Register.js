@@ -38,7 +38,7 @@ function Register() {
       <form className="register__form ">
         {/*<label className="register__label"> */}
         <input
-          className="register__input"
+          className="form__input register__input "
           name="email"
           value={email || ""}
           type="email"
@@ -49,7 +49,7 @@ function Register() {
         {/*</label>*/}
         {/*<label className="register__label">*/}
         <input
-          className="register__input"
+          className="form__input register__input"
           name="password"
           value={password || ""}
           type="password"
@@ -59,13 +59,13 @@ function Register() {
         />
         {/*</label>*/}
       </form>
-      <div className="register__button-container">
-        <button onClick={handleSubmit} className="register__button">
+      
+        <button onClick={handleSubmit} className="form__button register__button">
           Sign up
         </button>
-      </div>
+      
       <div className="register__signin">
-        <p>Already a member?</p>
+        {"Already a member?  "}
         <Link to="/signin" className="register__login-link">
           Log in here
         </Link>

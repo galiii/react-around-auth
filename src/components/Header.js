@@ -4,6 +4,7 @@ import React from 'react';
    return (
       <header className="header">
         <div className="header__logo"></div>
+        <div className="header__status">Sign up</div>
       </header>
    );
  }

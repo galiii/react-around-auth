@@ -5,6 +5,7 @@ import Header from "./Header";
 
 import Login from "./Login";
 import Register from "./Register";
+import InfoTooltip from "./InfoTooltip";
 import ProtectedRoute from "./ProtectedRoute";
 
 import Main from "./Main";
@@ -20,22 +21,28 @@ import api from "../utils/api.js";
 import "../index.css";
 
 function App() {
-  //Popup
+  //States for auth
+  const [isSuccessful, setIsSuccessful] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  //popup
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
+
+  /* States when you ready Login */
+  //Popups
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
     React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
     React.useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-
+  
   const [selectedCard, setSelectedCard] = React.useState({
     name: "",
     link: "",
   });
-
-  const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
+  const [currentUser, setCurrentUser] = React.useState({});
+  
 
   /* Get User Information && Card List from the api */
   React.useEffect(() => {
@@ -51,7 +58,6 @@ function App() {
   const handleEditAvatarClick = () => setIsEditAvatarPopupOpen(true);
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
   const handleAddPlaceClick = () => setIsAddPlacePopupOpen(true);
-  //const handleDeleteCard = () => setIsDeleteCardPopupOpen(true);
 
   const handleCardClick = (card) => {
     setSelectedCard({
@@ -82,7 +88,6 @@ function App() {
         setCards(
           (state) => state.filter((c) => c._id !== card._id) //Create array of cards that aren't delete
         );
-        //setIsDeleteCardPopupOpen(false);
       })
       .catch(console.error);
   };
@@ -111,7 +116,6 @@ function App() {
         setCurrentUser({
           ...res,
         });
-        //console.log("AVATAR APP", res);
         setIsEditAvatarPopupOpen(false);
       })
       .catch(console.error)
@@ -123,7 +127,6 @@ function App() {
 
   /* Add new Card handler */
   const handleAddPlaceSubmit = (data) => {
-    //console.log("new", data);
     api
       .addCard(data)
       .then((res) => {
@@ -140,11 +143,26 @@ function App() {
   };
 
   const closeAllPopups = () => {
+    setIsInfoTooltipOpen(false);
+
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
   };
+
+  const handleSignIn = () => {
+
+  };
+  const handleLogin = () => {
+
+  };
+
+  const handleSignOut = () => {};
+
+  /* User Authentication   */
+
+
 
   return (
     <div className="page__container">
@@ -159,9 +177,9 @@ function App() {
           <Route path="/signin">
             <Login />
           </Route>
-          
+
           <ProtectedRoute isLoggedIn={isLoggedIn} path="/cards">
-          <Main
+            <Main
               onEditAvatarClick={handleEditAvatarClick}
               onEditProfileClick={handleEditProfileClick}
               onAddPlaceClick={handleAddPlaceClick}
@@ -171,7 +189,6 @@ function App() {
               onCardDelete={handleCardDelete}
             />
             <Footer />
-
           </ProtectedRoute>
           <Route path="/">
             {
@@ -181,6 +198,11 @@ function App() {
             }
           </Route>
         </Switch>
+
+        <InfoTooltip 
+        isOpen={isInfoTooltipOpen} 
+        onClose={closeAllPopups} 
+        />
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

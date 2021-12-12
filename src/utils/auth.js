@@ -1,7 +1,7 @@
 import { customFetch } from "./utils.js";
 const BASE_URL = "https://register.nomoreparties.co";
 
-export const register = ({  email, password }) => {
+export const register = (email, password ) => {
   return customFetch(`${BASE_URL}/signup`, {
     method: "POST",
     headers: {
@@ -15,7 +15,7 @@ export const register = ({  email, password }) => {
 };
 
 
-export const login = ({  email, password }) => {
+export const login  = ({  email, password }) => {
   return customFetch(`${BASE_URL}/signin`, {
     method: "POST",
     headers: {

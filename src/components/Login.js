@@ -24,10 +24,10 @@ function Login() {
   return (
     <div className="register">
       <h2 className="register__title">Log in</h2>
-      <form className="register__form ">
+      <form className="form register__form ">
         {/*<label className="register__label"> */}
         <input
-          className="register__input"
+          className="form__input register__input"
           name="email"
           value={email || ""}
           type="email"
@@ -38,7 +38,7 @@ function Login() {
         {/*</label>*/}
         {/*<label className="register__label">*/}
         <input
-          className="register__input"
+          className="form__input register__input"
           name="password"
           value={password || ""}
           type="password"
@@ -48,13 +48,13 @@ function Login() {
         />
         {/*</label>*/}
       </form>
-      <div className="register__button-container">
-        <button onClick={handleSubmit} className="register__button">
-          Sign up
+      
+        <button onClick={handleSubmit} className="form__button register__button">
+        Log in
         </button>
-      </div>
+     
       <div className="register__signin">
-        <p>Not a member yet?</p>
+       {"Not a member yet? "}
         <Link to="/signup" className="register__login-link">
           Sign up here!
         </Link>
