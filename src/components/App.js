@@ -15,6 +15,7 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import ImagePopup from "./ImagePopup";
 import Footer from "./Footer";
+
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 import api from "../utils/api.js";
@@ -25,19 +26,23 @@ import "../index.css";
 function App() {
   // States for auth
   const [isSuccessful, setIsSuccessful] = React.useState(false);
+  // Message for error or Successful
   const [message, setMessage] = React.useState("");
-
+  // If the User isLoggedIn true or false
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  //popup
+  // is InfoTooltip is Open popup true or false
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
 
   /* States when you ready Login */
-  // Popups
+  // Is EditProfilePopup is Open true or false
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
     React.useState(false);
+  // Is AddPlacePopup is Open true or false
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  // Is EditAvatarPopup is Open true or false
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
     React.useState(false);
+  // Is ImagePopup is Open true or false
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
 
   const [selectedCard, setSelectedCard] = React.useState({
@@ -46,25 +51,45 @@ function App() {
   });
   const [cards, setCards] = React.useState([]);
   const [currentUser, setCurrentUser] = React.useState({});
+  const [userEmail, setUserEmail] = React.useState("");
   const history = useHistory();
 
-  /* Get User Information && Card List from the api */
   React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([userData, cardData]) => {
-        console.log(userData);
-        setCurrentUser({ ...userData });
-        setCards([...cardData]);
-      })
-      .catch(console.error);
-  }, []);
+    tokenCheck();
+  }, [history]);
+
+  const tokenCheck = () => {
+    // if the user has a token in localStorage,
+    // this function will check that the user has a valid token
+    const jwt = localStorage.getItem("token");
+    console.log("jwt", jwt);
+    if (jwt) {
+      // we'll verify the token
+      auth
+        .getContent(jwt)
+        .then((res) => {
+          console.log("Res", res);
+          if (res) {
+            // we can get the user data here!
+            console.log("emails", res.data.email);
+            setUserEmail(res.data.email);
+            setIsLoggedIn(true);
+            //setIsSuccessful(true);
+            history.push("/");
+          }
+        })
+        .catch((err) => console.error(err));
+    } else {
+      setIsLoggedIn(false);
+    }
+  };
 
   const handleSignUp = ({ email, password }) => {
     auth
       .register({ email, password })
       .then((res) => {
         setIsSuccessful(true);
-          setMessage(SUCCESS);
+        setMessage(SUCCESS);
         history.push("/signin");
       })
       .catch((err) => {
@@ -85,26 +110,41 @@ function App() {
         if (res.token) {
           setIsLoggedIn(true);
           console.log("in login", res);
-          history.push("/");
-          // for tooltipinfo
           setIsSuccessful(true);
           setMessage(SUCCESS);
-          return;
+          console.log("login app email", email);
         } else {
           setIsSuccessful(false);
           setMessage(FAILURE);
         }
+        console.log("login before token");
+        tokenCheck();
       })
       .catch((err) => {
         console.error(err);
         setIsSuccessful(false);
         setMessage(FAILURE);
       })
-      .finally(() => {
-        console.log("finally login");
-        setIsInfoTooltipOpen(true);
-      });
+      .finally(() => setIsInfoTooltipOpen(true));
   };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setUserEmail("");
+    history.push("/signin");
+
+  };
+
+  /* Get User Information && Card List from the api */
+  React.useEffect(() => {
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([userData, cardData]) => {
+        setCurrentUser({ ...userData });
+        setCards([...cardData]);
+      })
+      .catch(console.error);
+  }, []);
 
   /* Click handlers */
   const handleEditAvatarClick = () => setIsEditAvatarPopupOpen(true);
@@ -203,25 +243,30 @@ function App() {
     setIsImagePopupOpen(false);
   };
 
-  const handleSignOut = () => {};
-
   /* User Authentication   */
 
   return (
     <div className="page__container">
       {/* embedding data from the currentUser using the  context provider  */}
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
-
         <Switch>
           <Route path="/signup">
+            <Header text={"Login"} link={"/sigin"} />
             <Register onSignUp={handleSignUp} />
           </Route>
           <Route path="/signin">
+            <Header text={"Sign Up"} link={"/signup"} />
             <Login onLogin={handleLogin} />
           </Route>
 
-          <ProtectedRoute isLoggedIn={isLoggedIn} path="/">
+          <ProtectedRoute isLoggedIn={isLoggedIn} exact path="/">
+            <Header
+              text={"Log out"}
+              link={"/"}
+              email={userEmail}
+              isLoggedIn={isLoggedIn}
+              onSignOut = {handleSignOut}
+            />
             <Main
               onEditAvatarClick={handleEditAvatarClick}
               onEditProfileClick={handleEditProfileClick}
@@ -231,9 +276,8 @@ function App() {
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
             />
-            <Footer />
           </ProtectedRoute>
-          <Route path="/">
+          <Route>
             {
               //if the user isLoggedIn send him to the Main page
               //else send him to the login/signin page
@@ -242,6 +286,7 @@ function App() {
           </Route>
         </Switch>
 
+        {isLoggedIn ? <Footer /> : ""}
         <InfoTooltip
           isOpen={isInfoTooltipOpen}
           onClose={closeAllPopups}

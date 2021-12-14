@@ -25,6 +25,22 @@ const [isStatusInfoTooltip, setStatusInfoTooltip] = React.useState(false);
 //Oops, something went wrong! Please try again.
 const [message, setMessage ] = React.useState("");
 
+
+const handleSignUp = ({ email, password }) => {
+    auth
+      .register({ email, password })
+      .then((res) => {
+        setIsSuccessful(true);
+        setMessage(SUCCESS);
+        
+      })
+      .catch((err) => {
+        setIsSuccessful(false);
+        setMessage(FAILURE);
+      })
+      .finally(() =>  setIsInfoTooltipOpen(true));
+  };
+
 //on login 
 const handleLogin = ({ email, password }) => {
     auth
@@ -52,3 +68,5 @@ const handleLogin = ({ email, password }) => {
 export const SUCCESS = "Success! You have now been registered.";
 export const FAILURE = "Oops, something went wrong! Please try again.";
 ```
+
+
