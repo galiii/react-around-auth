@@ -19,11 +19,11 @@ function Login({ onLogin }) {
   }, []);
 
   return (
-    <div className="register">
-      <h2 className="register__title">{"Log in"}</h2>
-      <form className="form register__form ">
+    <div className="auth">
+      <h2 className="auth__title">{"Log in"}</h2>
+      <form className="form auth__form">
         <input
-          className="form__input register__input"
+          className="form__input auth__input"
           name="email"
           value={email || ""}
           type="email"
@@ -32,7 +32,7 @@ function Login({ onLogin }) {
           required
         />
         <input
-          className="form__input register__input"
+          className="form__input auth__input"
           name="password"
           value={password || ""}
           type="password"
@@ -42,13 +42,13 @@ function Login({ onLogin }) {
         />
       </form>
 
-      <button onClick={handleSubmit} className="form__button register__button">
+      <button onClick={handleSubmit} className="form__button auth__button">
         {"Log in"}
       </button>
 
-      <div className="register__signin">
+      <div className="auth__text">
         {"Not a member yet? "}
-        <Link to="/signup" className="register__login-link">
+        <Link to="/signup" className="auth__link">
           {"Sign up here!"}
         </Link>
       </div>

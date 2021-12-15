@@ -19,11 +19,11 @@ function Register({ onSignUp }) {
   }, []);
 
   return (
-    <div className="register">
-      <h2 className="register__title">{"Sign up"}</h2>
-      <form className="register__form ">
+    <div className="auth">
+      <h2 className="auth__title">{"Sign up"}</h2>
+      <form className="form auth__form">
         <input
-          className="form__input register__input "
+          className="form__input auth__input "
           name="email"
           value={email || ""}
           type="email"
@@ -33,7 +33,7 @@ function Register({ onSignUp }) {
         />
 
         <input
-          className="form__input register__input"
+          className="form__input auth__input"
           name="password"
           value={password || ""}
           type="password"
@@ -43,13 +43,13 @@ function Register({ onSignUp }) {
         />
       </form>
 
-      <button onClick={handleSubmit} className="form__button register__button">
+      <button onClick={handleSubmit} className="form__button auth__button">
         {"Sign up"}
       </button>
 
       <div className="register__signin">
         {"Already a member?  "}
-        <Link to="/signin" className="register__login-link">
+        <Link to="/signin" className="auth__link">
           {"Log in here"}
         </Link>
       </div>

@@ -1,33 +1,19 @@
 .auth {
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    width: 358px;
-    margin: 0 auto;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 358px;
+  margin: 0 auto;
 }
 
 input:-internal-autofill-selected {
-    background-color: black;
+  background-color: black;
 }
 
-.register__login-link {
-    color: #fff;
-    text-decoration: none;
-}
-
-.register__button-container {
-    display: flex;
-    justify-content: center;
-    
-}
-
-.auth__button {
-    background:  #fff;
-    color: #000;
-    font-size: 14px;
-    margin: 216px 0 15px;
-    line-height: 19px;
-    /*border: none;*/  
+@media screen and (max-width: 540px) {
+  .auth {
+    width: 260px;
+  }
 }

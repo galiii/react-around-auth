@@ -12,7 +12,7 @@ function Header({ text, link, ...props }) {
               <div className="header__email">{props.email}</div>
               <Link
                 to={link}
-                className="header__link"
+                className="header__link header__link-logout"
                 onClick={props.onSignOut}
               >
                 {text}
@@ -21,8 +21,8 @@ function Header({ text, link, ...props }) {
           );
         } else {
           return (
-            <Link to={link}>
-              <p className="header__link">{text}</p>
+            <Link to={link} className="header__link">
+              {text}
             </Link>
           );
         }
