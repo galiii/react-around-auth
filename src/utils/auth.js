@@ -11,9 +11,7 @@ export const register = ({email, password}) => {
     },
     body: JSON.stringify({  email, password }),
   })
-  .then(handleResponse)
-  .then(data => console.log(data))
-  /*.catch((err) => console.log(err));  */ 
+  .then(handleResponse);
 };
 
 
@@ -29,7 +27,6 @@ export const login  = ({  email, password }) => {
   })
   .then(handleResponse)
   .then((data) => {
-    //console.log(data);
     if (data.token) {
       localStorage.setItem("token",data.token);
       //console.log("data",data);

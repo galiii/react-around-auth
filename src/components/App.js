@@ -95,8 +95,9 @@ function App() {
   const handleSignUp = ({ email, password }) => {
     auth
       .register({ email, password })
-      .then((res) => {
-        console.log("sigin auth line 89", res);
+      //.then(data => console.log(data))
+      .then((data) => {
+        console.log(data);
         setIsSuccessful(true);
         setMessage(SUCCESS);
         history.push("/signin");
@@ -142,8 +143,8 @@ function App() {
         }
         setIsSuccessful(false);
         setMessage(FAILURE);
-      })
-      .finally(() => setIsInfoTooltipOpen(true));
+        setIsInfoTooltipOpen(true);
+      });
   };
 
   const handleSignOut = () => {
@@ -216,11 +217,7 @@ function App() {
         });
         setIsEditProfilePopupOpen(false);
       })
-      .catch(console.error)
-      .finally(
-        () => console.log("finally")
-        //renderLoading(false, editProfileModel, buttonsSettings.edit)
-      );
+      .catch(console.error);
   };
 
   /* Update profile image */
@@ -233,8 +230,7 @@ function App() {
         });
         setIsEditAvatarPopupOpen(false);
       })
-      .catch(console.error)
-      .finally(() => console.log("finally"));
+      .catch(console.error);
   };
 
   /* Add new Card handler */
@@ -247,11 +243,7 @@ function App() {
         setCards([res, ...cards]);
         setIsAddPlacePopupOpen(false);
       })
-      .catch(console.error)
-      .finally(
-        () => console.log("finally")
-        //renderLoading(false, addCardModel, buttonsSettings.create)
-      );
+      .catch(console.error);
   };
 
   const closeAllPopups = () => {
@@ -262,6 +254,16 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
   };
+
+  React.useEffect(() => {
+    const closeByEscape = (e) => {
+      if (e.key === "Escape") {
+        closeAllPopups();
+      }
+    };
+    document.addEventListener("keydown", closeByEscape);
+    return () => document.removeEventListener("keydown", closeByEscape);
+  }, []);
 
   return (
     <div className="page__container">

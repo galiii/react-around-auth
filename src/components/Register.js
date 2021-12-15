@@ -21,7 +21,7 @@ function Register({ onSignUp }) {
   return (
     <div className="auth">
       <h2 className="auth__title">{"Sign up"}</h2>
-      <form className="form auth__form">
+      <form className="form auth__form" onSubmit={handleSubmit}>
         <input
           className="form__input auth__input "
           name="email"
@@ -41,11 +41,8 @@ function Register({ onSignUp }) {
           placeholder="Password"
           required
         />
+        <button className="form__button auth__button">{"Sign up"}</button>
       </form>
-
-      <button onClick={handleSubmit} className="form__button auth__button">
-        {"Sign up"}
-      </button>
 
       <div className="register__signin">
         {"Already a member?  "}

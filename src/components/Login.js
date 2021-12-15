@@ -21,7 +21,7 @@ function Login({ onLogin }) {
   return (
     <div className="auth">
       <h2 className="auth__title">{"Log in"}</h2>
-      <form className="form auth__form">
+      <form className="form auth__form" onSubmit={handleSubmit}>
         <input
           className="form__input auth__input"
           name="email"
@@ -40,11 +40,8 @@ function Login({ onLogin }) {
           placeholder="Password"
           required
         />
+        <button className="form__button auth__button">{"Log in"}</button>
       </form>
-
-      <button onClick={handleSubmit} className="form__button auth__button">
-        {"Log in"}
-      </button>
 
       <div className="auth__text">
         {"Not a member yet? "}
