@@ -20,7 +20,7 @@ function Login({ onLogin }) {
 
   return (
     <div className="register">
-      <h2 className="register__title">Log in</h2>
+      <h2 className="register__title">{"Log in"}</h2>
       <form className="form register__form ">
         <input
           className="form__input register__input"
@@ -43,13 +43,13 @@ function Login({ onLogin }) {
       </form>
 
       <button onClick={handleSubmit} className="form__button register__button">
-        Log in
+        {"Log in"}
       </button>
 
       <div className="register__signin">
         {"Not a member yet? "}
         <Link to="/signup" className="register__login-link">
-          Sign up here!
+          {"Sign up here!"}
         </Link>
       </div>
     </div>

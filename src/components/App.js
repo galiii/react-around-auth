@@ -7,7 +7,6 @@ import Login from "./Login";
 import Register from "./Register";
 import InfoTooltip from "./InfoTooltip";
 import ProtectedRoute from "./ProtectedRoute";
-
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 import EditProfilePopup from "./EditProfilePopup";
@@ -30,7 +29,7 @@ function App() {
   const [message, setMessage] = React.useState("");
   // If the User isLoggedIn true or false
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  // is InfoTooltip is Open popup true or false
+  // Is InfoTooltip is Open popup true or false
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
 
   /* States when you ready Login */
@@ -45,6 +44,7 @@ function App() {
   // Is ImagePopup is Open true or false
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
 
+  // Selected card
   const [selectedCard, setSelectedCard] = React.useState({
     name: "",
     link: "",
@@ -54,9 +54,7 @@ function App() {
   const [userEmail, setUserEmail] = React.useState("");
   const history = useHistory();
 
-  React.useEffect(() => {
-    tokenCheck();
-  }, [history]);
+  /*  Authentication   */
 
   const tokenCheck = () => {
     // if the user has a token in localStorage,
@@ -78,7 +76,17 @@ function App() {
             history.push("/");
           }
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          if (err === "Error: Bad Request") {
+            console.error(
+              "400 — Token not provided or provided in the wrong format"
+            );
+          } else if (err === "Error: Unauthorized") {
+            console.error("401 — The provided token is invalid ");
+          } else {
+            console.error(err);
+          }
+        });
     } else {
       setIsLoggedIn(false);
     }
@@ -88,19 +96,22 @@ function App() {
     auth
       .register({ email, password })
       .then((res) => {
+        console.log("sigin auth line 89", res);
         setIsSuccessful(true);
         setMessage(SUCCESS);
         history.push("/signin");
       })
       .catch((err) => {
-        console.error(err);
+        if (err === "Error: Bad Request") {
+          console.error("400 - one of the fields was filled in incorrectly");
+        } else {
+          console.error("err", err);
+        }
+
         setIsSuccessful(false);
         setMessage(FAILURE);
       })
-      .finally(() => {
-        console.log("finally register");
-        setIsInfoTooltipOpen(true);
-      });
+      .finally(() => setIsInfoTooltipOpen(true));
   };
 
   const handleLogin = ({ email, password }) => {
@@ -120,8 +131,15 @@ function App() {
         console.log("login before token");
         tokenCheck();
       })
-      .catch((err) => {
-        console.error(err);
+      .catch((err, status) => {
+        console.log(err);
+        if (err === "Error: Bad Request") {
+          console.error("400 - one or more of the fields were not provided");
+        } else if (err === "Error: Unauthorized") {
+          console.error("401 - the user with the specified email not found ");
+        } else {
+          console.error("err", err);
+        }
         setIsSuccessful(false);
         setMessage(FAILURE);
       })
@@ -133,8 +151,11 @@ function App() {
     setIsLoggedIn(false);
     setUserEmail("");
     history.push("/signin");
-
   };
+
+  React.useEffect(() => {
+    tokenCheck();
+  }, [history]);
 
   /* Get User Information && Card List from the api */
   React.useEffect(() => {
@@ -151,6 +172,7 @@ function App() {
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
   const handleAddPlaceClick = () => setIsAddPlacePopupOpen(true);
 
+  /* Handle popup current card click */
   const handleCardClick = (card) => {
     setSelectedCard({
       name: card.name,
@@ -201,6 +223,7 @@ function App() {
       );
   };
 
+  /* Update profile image */
   const handleUpdateAvatar = (link) => {
     api
       .updateUserImage(link)
@@ -211,10 +234,7 @@ function App() {
         setIsEditAvatarPopupOpen(false);
       })
       .catch(console.error)
-      .finally(
-        () => console.log("finally")
-        //renderLoading(false, editProfileModel, buttonsSettings.edit)
-      );
+      .finally(() => console.log("finally"));
   };
 
   /* Add new Card handler */
@@ -243,8 +263,6 @@ function App() {
     setIsImagePopupOpen(false);
   };
 
-  /* User Authentication   */
-
   return (
     <div className="page__container">
       {/* embedding data from the currentUser using the  context provider  */}
@@ -265,7 +283,7 @@ function App() {
               link={"/"}
               email={userEmail}
               isLoggedIn={isLoggedIn}
-              onSignOut = {handleSignOut}
+              onSignOut={handleSignOut}
             />
             <Main
               onEditAvatarClick={handleEditAvatarClick}
